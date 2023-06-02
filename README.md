@@ -13,7 +13,6 @@
   ```
 ## Running your tests
 * To run a sample tests, run `mvn test -P sample-test`
-* To run sample tests with local, run `mvn test -P sample-local-test`
 * Update `<parallel.count>` in `pom.xml` to set the number of parallel threads 
 
 Understand how many parallel sessions you need by using our [Parallel Test Calculator](https://www.browserstack.com/automate/parallel-calculator?ref=github)

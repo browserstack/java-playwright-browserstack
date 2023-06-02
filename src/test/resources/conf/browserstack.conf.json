@@ -1,14 +1,5 @@
 {
-  "wss": "wss://cdp.browserstack.com/playwright",
-  "userName": "BROWSERSTACK_USERNAME",
-  "accessKey": "BROWSERSTACK_ACCESS_KEY",
-  "capabilities": {
-    "project": "BStack Project",
-    "build": "browserstack-build-1",
-    "buildTag": "Regression",
-    "browserstack.debug": "true",
-    "browserstack.console": "info"
-  },
+  "wss": "ws://127.0.0.1:64225/ec873d261d8cad986db668660c8ab412",
   "environments": [
     {
       "os": "Windows",
@@ -20,12 +11,6 @@
       "os": "OS X",
       "os_version": "Monterey",
       "browser": "playwright-webkit",
-      "browser_version": "latest"
-    },
-    {
-      "os": "OS X",
-      "os_version": "Ventura",
-      "browser": "playwright-firefox",
       "browser_version": "latest"
     }
   ]
