@@ -7,8 +7,8 @@ This repo contains samples for running junit-5 playwright tests on browserstack.
 * Update credentials in the `browserstack.yml` file with your [BrowserStack Username and Access Key](https://www.browserstack.com/accounts/settings).
 
 ## Running tests:
-* To run a sample tests, run `mvn test -P sample`.
-* To run local tests, run `mvn test -P local`.
+* To run a sample tests, run `mvn test -P sample-test`.
+* To run local tests, run `mvn test -P sample-local-test`.
 
 Understand how many parallel sessions you need by using our [Parallel Test Calculator](https://www.browserstack.com/automate/parallel-calculator?ref=github)
 
