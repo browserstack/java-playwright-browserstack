@@ -16,7 +16,7 @@
         <browserstack-local-java>1.0.6</browserstack-local-java>
         <httpclient>4.5.13</httpclient>
         <parallel.count>3</parallel.count>
-        <tests.single>**/tests.SampleTest.java</tests.single>
+        <tests.sample>**/tests.SampleTest.java</tests.sample>
         <tests.local>**/tests.LocalTest.java</tests.local>
     </properties>
     <dependencies>
@@ -138,7 +138,7 @@
                         <version>3.0.0-M5</version>
                         <configuration>
                             <includes>
-                                <include>${tests.single}</include>
+                                <include>${tests.sample}</include>
                             </includes>
                             <testFailureIgnore>false</testFailureIgnore>
                             <argLine>
