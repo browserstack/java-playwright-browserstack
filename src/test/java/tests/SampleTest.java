@@ -8,7 +8,7 @@ import runners.BstackRunner;
 public class SampleTest extends BstackRunner {
 
     @Test
-    void sampleTest() {
+    void bstackSampleTest() {
         try {
             page.navigate("https://bstackdemo.com/");
             String product_name = page.locator("//*[@id='1']/p").textContent();

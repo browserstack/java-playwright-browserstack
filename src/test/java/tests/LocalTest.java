@@ -8,7 +8,7 @@ import runners.BstackRunner;
 public class LocalTest extends BstackRunner {
 
 	@Test
-	void sampleTest() {
+	void bstackSampleLocalTest() {
 		try {
 			page.navigate("http://bs-local.com:45454/");
 			String validateContent = page.title();

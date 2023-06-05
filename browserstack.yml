@@ -34,15 +34,16 @@ source: java-playwright-browserstack:sample-sdk:v1.0
 platforms:
   - os: OS X
     osVersion: Big Sur
-    browserName: Chrome
+    browserName: chrome
     browserVersion: latest
   - os: Windows
     osVersion: 10
-    browserName: Edge
+    browserName: playwright-firefox
     browserVersion: latest
-  - deviceName: Samsung Galaxy S22 Ultra
-    browserName: chrome # Try 'samsung' for Samsung browser
-    osVersion: 12.0
+  - os: OS X
+    osVersion: catalina
+    browserName: playwright-webkit
+    browserVersion: latest
 
 # =======================
 # Parallels per Platform
