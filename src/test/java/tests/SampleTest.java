@@ -1,15 +1,14 @@
 package tests;
 
-import com.microsoft.playwright.Browser;
-import com.microsoft.playwright.Page;
-import runners.PlaywrightTest;
+import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class SampleTest {
+import runners.BstackRunner;
 
-    @PlaywrightTest
-    void sampleTest(Browser browser) {
-        Page page = browser.newPage();
+public class SampleTest extends BstackRunner {
+
+    @Test
+    void sampleTest() {
         try {
             page.navigate("https://bstackdemo.com/");
             String product_name = page.locator("//*[@id='1']/p").textContent();
@@ -21,6 +20,5 @@ public class SampleTest {
         } catch (Exception e) {
             System.out.println("Exception: " + e.getMessage());
         }
-        browser.close();
     }
 }

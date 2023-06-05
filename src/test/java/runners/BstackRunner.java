@@ -1,81 +1,77 @@
 package runners;
 
-import com.microsoft.playwright.Browser;
-import com.microsoft.playwright.BrowserType;
-import com.microsoft.playwright.Playwright;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.junit.jupiter.api.extension.*;
+import com.microsoft.playwright.*;
+import org.junit.jupiter.api.*;
+import org.yaml.snakeyaml.Yaml;
 
-import java.io.FileReader;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import org.json.JSONObject;
 import java.util.*;
-import java.util.stream.Stream;
+import java.io.File;
+import java.io.InputStream;
+import java.nio.file.Files;
 
-public class BstackRunner implements TestTemplateInvocationContextProvider {
-    public Browser browser;
-    public String wss;
-    private JSONObject mainConfig;
-    private JSONArray platformConfig;
+public class BstackRunner {
+    public static String userName, accessKey;
+    public static Map<String, Object> browserStackYamlMap;
+    public static final String USER_DIR = "user.dir";
+    
+    static Playwright playwright;
+    static Browser browser;
 
-    @Override
-    public boolean supportsTestTemplate(ExtensionContext extensionContext) {
-        return true;
+    BrowserContext context;
+    public Page page;
+
+    public BstackRunner() {
+        File file = new File(getUserDir() + "/browserstack.yml");
+        browserStackYamlMap = convertYamlFileToMap(file, new HashMap<>());
     }
 
-    @Override
-    public Stream<TestTemplateInvocationContext> provideTestTemplateInvocationContexts(ExtensionContext extensionContext) {
-        List<TestTemplateInvocationContext> desiredCapsInvocationContexts = new ArrayList<>();
+    @BeforeEach
+    void launchBrowser() {
+        playwright = Playwright.create();
+        BrowserType browserType = playwright.chromium();
+        String caps = null;
+        userName = System.getenv("BROWSERSTACK_USERNAME") != null ? System.getenv("BROWSERSTACK_USERNAME") : (String) browserStackYamlMap.get("userName");
+        accessKey = System.getenv("BROWSERSTACK_ACCESS_KEY") != null ? System.getenv("BROWSERSTACK_ACCESS_KEY") : (String) browserStackYamlMap.get("accessKey");
 
+        HashMap<String, String> capabilitiesObject = new HashMap<>();
+        capabilitiesObject.put("browserstack.user", userName);
+        capabilitiesObject.put("browserstack.key", accessKey);
+        capabilitiesObject.put("browserstack.source", "java-playwright-browserstack:sample-sdk:v1.0");
+        capabilitiesObject.put("browser", "chrome");
+
+        JSONObject jsonCaps = new JSONObject(capabilitiesObject);
         try {
-            JSONParser parser = new JSONParser();
-            mainConfig = (JSONObject) parser
-                        .parse(new FileReader("src/test/resources/conf/" + System.getProperty("config")));
-            platformConfig = (JSONArray) mainConfig.get("environments");
-            wss = (String) mainConfig.get("wss");
-
-            for (int i = 0; i < platformConfig.size(); i++) {
-                JSONObject platform = (JSONObject) platformConfig.get(i);
-                desiredCapsInvocationContexts.add(invocationContext(platform));
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+            caps = URLEncoder.encode(jsonCaps.toString(), "utf-8");
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
         }
-        return desiredCapsInvocationContexts.stream();
+        String wsEndpoint = "wss://cdp.browserstack.com/playwright?caps=" + caps;
+        browser = browserType.connect(wsEndpoint);
+        page = browser.newPage();
     }
 
-    private TestTemplateInvocationContext invocationContext(JSONObject capabilitiesObject) {
-        return new TestTemplateInvocationContext() {
+    @AfterEach
+    void closeContext() {
+        page.close();
+        browser.close();
+    }
 
-            @Override
-            public List<Extension> getAdditionalExtensions() {
+    private String getUserDir() {
+        return System.getProperty(USER_DIR);
+    }
 
-                return Collections.singletonList(new ParameterResolver() {
-                    @Override
-                    public boolean supportsParameter(ParameterContext parameterContext,
-                                                     ExtensionContext extensionContext) {
-                        return parameterContext.getParameter().getType().equals(Browser.class);
-                    }
-
-                    @Override
-                    public Object resolveParameter(ParameterContext parameterContext,
-                                                   ExtensionContext extensionContext) {
-                        Playwright playwright = Playwright.create();
-                        BrowserType browserType = playwright.chromium();
-                        String caps = null;
-                        try {
-                            caps = URLEncoder.encode(capabilitiesObject.toString(), "utf-8");
-                        } catch (UnsupportedEncodingException e) {
-                            throw new RuntimeException(e);
-                        }
-                        String ws_endpoint = wss + "?caps=" + caps;
-                        browser = browserType.connect(ws_endpoint);
-                        return browser;
-                    }
-                });
-            }
-        };
+    private Map<String, Object> convertYamlFileToMap(File yamlFile, Map<String, Object> map) {
+        try {
+            InputStream inputStream = Files.newInputStream(yamlFile.toPath());
+            Yaml yaml = new Yaml();
+            Map<String, Object> config = yaml.load(inputStream);
+            map.putAll(config);
+        } catch (Exception e) {
+            throw new RuntimeException(String.format("Malformed browserstack.yml file - %s.", e));
+        }
+        return map;
     }
 }
