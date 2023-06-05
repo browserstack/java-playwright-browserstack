@@ -17,6 +17,7 @@
         <httpclient>4.5.13</httpclient>
         <parallel.count>3</parallel.count>
         <tests.single>**/tests.SampleTest.java</tests.single>
+        <tests.local>**/tests.LocalTest.java</tests.local>
     </properties>
     <dependencies>
         <dependency>
@@ -86,7 +87,7 @@
                         <version>3.0.0-M5</version>
                         <configuration>
                             <includes>
-                                <include>${tests.single}</include>
+                                <include>${tests.tests.local}</include>
                             </includes>
                             <testFailureIgnore>false</testFailureIgnore>
                             <argLine>

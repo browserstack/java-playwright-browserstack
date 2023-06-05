@@ -1,4 +1,5 @@
-##  java-playwright-browserstack
+#  java-playwright-browserstack
+This repo contains samples for running junit-5 playwright tests on browserstack.
 
 ## Setup
 * Clone the repo
