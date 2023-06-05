@@ -2,7 +2,7 @@
 This repo contains samples for running junit-5 playwright tests on browserstack.
 
 ## Setup
-* Clone the repo
+* Clone the repo `git clone -b sdk https://github.com/browserstack/java-playwright-browserstack.git`
 * Install dependencies `mvn install`
 * Update credentials in the `browserstack.yml` file with your [BrowserStack Username and Access Key](https://www.browserstack.com/accounts/settings).
 
